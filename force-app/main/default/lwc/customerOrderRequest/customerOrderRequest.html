@@ -1,0 +1,273 @@
+<template>
+    <lightning-card>
+        <lightning-spinner if:true={isLoading} alternative-text="Loading" size="small"></lightning-spinner>
+    
+        <template if:false={isLoading}> 
+    
+<template if:true={showBanner}>
+    <h3 class="slds-text-heading_small slds-text-align_center slds-p-around_medium">{subRequestType}</h3>
+    <div class="sku-banner slds-box slds-theme_alert-texture slds-m-bottom_medium" 
+    style="background-color: #fef7e0; border: 1px solid #f2c200; border-radius: 6px;
+    padding: 10px; margin-bottom: 10px; font-weight: 500; color: #5a5a5a; text-align: center;">
+    <strong>Note:</strong> File upload will appear only after the case is created. So, Please select the option YES and click the "Create Case" button to proceed.
+    </div>
+</template>
+
+
+<!-- Return Transfer (RA) Request -->
+<template if:true={showRAForm}>
+    
+                                        
+    <div class="slds-grid slds-wrap slds-p-around_medium slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Order Number"  name="orderNumber"  onchange={handleInputChange} required></lightning-input>
+        </div>                     
+        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required></lightning-input>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-record-picker  label="Hub Location" placeholder="Type Something..." object-api-name="Store__c" onchange={handleHubLocationChange} name="hubLocation" value={hubLocationId} required ></lightning-record-picker>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group label="Reason for RA"  name="reasonForRA" onchange={handleInputChange} options={raReasons} required type="radio"> </lightning-radio-group>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-textarea label="Additional Notes free entry window" onchange={handleInputChange} name="additionalNotes"> </lightning-textarea>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required></lightning-radio-group>
+        </div>                                        
+     </div>
+</template>
+
+
+ <!-- Remove From Manifest Request -->
+ <template if:true={showManifestFom}>
+
+                                    
+    <div class="slds-grid slds-wrap slds-p-around_medium slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Sales Order Return or Exchange" name="orderNumber" onchange={handleInputChange}  required> </lightning-input>
+        </div>                     
+                
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input label="SKU or entire fulfillment date"  name="skuFulfillment"  onchange={handleInputChange} required> </lightning-input>
+        </div>
+                
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input type="date"  name="fulfillmentDate" label="Fulfillment Date"  onchange={handleInputChange} required> </lightning-input>
+        </div>
+                
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group  label="Reason for request (if SKU not entire fulfillment date)"  name="manifestReason" onchange={handleInputChange}   
+                    options={manifestReasons} required type="radio"> </lightning-radio-group>
+        </div>       
+        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Customer Name"  name="customerName" onchange={handleInputChange}  required> </lightning-input>
+        </div>
+                
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group type="radio"  label="Will you attach files for this request?"  name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required ></lightning-radio-group>  
+         </div>  
+    </div> 
+
+</template>
+
+ <!-- Borrow Request -->
+<template if:true={showBorrowForm}>
+                                  
+    <div class="slds-grid slds-wrap slds-p-around_medium slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Requestor Store#"  name="requestorStore"  onchange={handleInputChange} required> </lightning-input>
+        </div>                     
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Order to borrow to"  name="borrowTo"  onchange={handleInputChange}  required> </lightning-input>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  name="stockLocationTo"  label="Stock Location of borrow to order"  onchange={handleInputChange}  required> </lightning-input>
+        </div>
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input name="borrowFrom"  label="Order to borrow from" onchange={handleInputChange}  required></lightning-input>
+        </div>   
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  name="stockLocationFrom"  label="Stock Location of borrow from order" onchange={handleInputChange}   required> </lightning-input>
+        </div>  
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  name="sku"  label="SKU"  onchange={handleInputChange}  required> </lightning-input>
+        </div>     
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input name="quantity"  label="Quantity"  onchange={handleInputChange} required> </lightning-input>
+        </div>   
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input   name="permissionGranted"  label="Borrow from order permission granted by (name and title):"  onchange={handleInputChange}  required> </lightning-input>
+        </div>  
+                                            
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input label="Customer Name"  name="customerName"  onchange={handleInputChange}   required>  </lightning-input>
+        </div>
+                                               
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required></lightning-radio-group>  
+        </div>                         
+                                           
+    </div>
+</template>
+
+<!-- Order Invoice Request / Order Invoiced in Error -->
+<template if:true={showOrderInvoice}>
+                                   
+    <div class="slds-grid slds-wrap slds-p-around_medium slds-gutters">
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  label="Order"  name="orderNumber"  onchange={handleInputChange}  required> </lightning-input>
+        </div>        
+                                        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group label="Order Type"  name="orderTypeValue"  onchange={handleInputChange} options={orderType}  required   type="radio"> </lightning-radio-group>
+        </div>                                             
+                                    
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input label="Customer Name" name="customerName"  onchange={handleInputChange} required></lightning-input>
+        </div>
+                                        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-input  type="date" name="confirmedDate" label="Date of confirmed delivery / Pickup / exchange" onchange={handleInputChange}  required></lightning-input>
+        </div>
+                                        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-textarea label="Additional Notes free entry window" onchange={handleInputChange} name="additionalNotes"> </lightning-textarea>
+        </div>
+                                        
+        <div class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+            <lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange}  class="slds-m-bottom_medium" required ></lightning-radio-group>
+        </div>                                 
+    </div>
+
+</template>
+
+<!-- Invoice Direct Ship Return -->
+<template if:true={showDirectShip}>
+<div class="slds-grid slds-wrap slds-p-around_medium">
+    <div class="slds-col slds-size_1-of-4 slds-p-right_small"><lightning-input label="Return Order" name="orderNumber" onchange={handleInputChange}  required></lightning-input></div>  
+    <div class="slds-col slds-size_1-of-4 slds-p-left_small"><lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required> </lightning-input></div>      
+    <div class="slds-col slds-size_1-of-4 slds-p-left_small"><lightning-radio-group label="Direct Ship Return Type"  name="returnTypeValue" onchange={handleInputChange}   options={returnType} required  type="radio"></lightning-radio-group></div>      
+    <div class="slds-col slds-size_1-of-4 slds-p-left_small"><lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required ></lightning-radio-group></div>                                                                
+</div></div>
+</template>
+
+<!-- Small Parcel Mark Out -->
+<template if:true={showParcel}>
+<div class="slds-grid slds-wrap slds-p-around_medium">
+    <div class="slds-col slds-size_1-of-2 slds-p-right_small slds-p-top_medium"><lightning-input label="Return Order Number" name="orderNumber" onchange={handleInputChange}  required></lightning-input></div>        
+    <div class="slds-col slds-size_1-of-2 slds-p-left_small slds-p-top_medium"><lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required> </lightning-input></div>    
+    <div class="slds-col slds-size_1-of-2 slds-p-right_small slds-p-top_medium"><lightning-textarea label="Additional Notes free entry window" onchange={handleInputChange}  name="additionalNotes" class="slds-m-top_small"></lightning-textarea></div>                        
+    <div class="slds-col slds-size_1-of-2 slds-p-left_small slds-p-top_medium"><lightning-radio-group label="Reason for small parcel mark out"  name="reasonForSmallParcel" onchange={handleInputChange}   options={parcelReason} required  type="radio"></lightning-radio-group></div> 
+    <div class="slds-col slds-size_1-of-2 slds-p-left_small slds-p-top_medium"><lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange}  class="slds-m-bottom_medium" required></lightning-radio-group>  </div> </div>
+
+</template>
+
+<!-- Change Ship Date -->
+
+<template if:true={showShipDate}>
+<div class="slds-grid slds-wrap slds-gutters slds-p-around_medium">
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+    <lightning-input  label="Sales Order Return or Exchange #"  name="orderNumber"  onchange={handleInputChange} required> </lightning-input>
+</div>
+
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+    <lightning-input   type="date"   name="fulfillmentDate"   label="Fulfillment Date"  onchange={handleInputChange}  required></lightning-input>
+</div>
+
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+    <lightning-input   type="date"   name="requestedHomeDeliveryDate" label="Requested In Home Delivery Date"  onchange={handleInputChange}   required></lightning-input>
+</div>
+
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium"><lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required> </lightning-input>
+</div>
+
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+    <lightning-radio-group label="Reason" name="reasonShipValue" onchange={handleInputChange} options={reasonShip} required  type="radio"></lightning-radio-group>
+</div>
+
+<div class="slds-col slds-size_1-of-2 slds-p-bottom_medium">
+    <lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} required> </lightning-radio-group>
+</div>
+</div>
+</template>
+
+
+<!-- Order Correction -->
+<template if:true={showOrderCorr}>
+<div class="slds-grid slds-gutters slds-wrap slds-p-around_medium"> 
+<div class="slds-col slds-size_1-of-3 slds-p-right_small"><lightning-input label="Sales Order Return or Exchange #" name="orderNumber" onchange={handleInputChange} required></lightning-input> </div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"><lightning-input label="SKU" name="sku" onchange={handleInputChange} required></lightning-input></div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"><lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required> </lightning-input></div>
+<div  class="slds-col slds-size_1-of-3 slds-p-right_small"><lightning-radio-group label="Reason" name="orderCorrReason" onchange={handleAddressChange} options={reasonOrderCorr} required type="radio"></lightning-radio-group></div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"> <lightning-radio-group type="radio" label="Will you attach files for this request?" options={fileAttachmentOptions} name="willAttachFiles" value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required ></lightning-radio-group>   </div> 
+
+<template if:true={isAddressChange}>
+<div class="slds-col slds-size_1-of-2 slds-p-right_small"><lightning-textarea label="Current Address" onchange={handleInputChange}  name="currentAddress" class="slds-m-top_small" required></lightning-textarea> </div>
+<div class="slds-col slds-size_1-of-2 slds-p-left_small"><lightning-textarea label="New Address" onchange={handleInputChange}  name="newAddress" class="slds-m-top_small" required></lightning-textarea></div>
+</template>
+</div>
+</template>
+
+<!-- Validate Item Shipped-->
+ <template if:true={showValidateForm}>
+<div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+<div class="slds-col slds-size_1-of-3 slds-p-right_small"><lightning-input label="Sales Order Return or Exchange #" name="orderNumber" onchange={handleInputChange} required></lightning-input></div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"><lightning-input label="Fulfillment" name="fulfillmentValue" onchange={handleInputChange} required></lightning-input></div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"><lightning-input  label="Customer Name"  name="customerName"  onchange={handleInputChange} required> </lightning-input></div>
+<div class="slds-col slds-size_1-of-3 slds-p-right_small"><lightning-radio-group label="Reason" name="reasonValidateValue" onchange={handleInputChange} options={reasonValidate} required type="radio"></lightning-radio-group></div>
+<div class="slds-col slds-size_1-of-3 slds-p-left_small"> <lightning-radio-group type="radio" label="Will you attach files for this request?" name="willAttachFiles" options={fileAttachmentOptions} value={willAttachFiles} onchange={handleFileAttachmentChange} class="slds-m-bottom_medium" required></lightning-radio-group>  </div> 
+</div>
+</template>
+
+<!-- Request for COI Screen Flow-->
+<!--template if:true={showFlow}>
+<lightning-flow flow-api-name="Request_COI_Form_to_Case" onstatuschange={handleStatusChange}></lightning-flow>
+</template -->
+
+<!-- Button to create case -->
+<template if:true={showBanner}>
+ <div class="slds-col slds-align_absolute-center slds-size_1-of-1 slds-p-top_medium" style="height:5rem">
+    <lightning-button label="Create Case"  onclick={handleCreateCase}  variant="brand"  class="slds-m-top_medium"></lightning-button>
+ </div>
+</template>
+
+<!-- Modal for File Upload (Auto-opened after case creation if 'Yes') -->
+<template if:true={isModalOpen}>
+<section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">Upload Files</h2>
+            </header>
+
+    <div class="slds-modal__content slds-p-around_medium">
+    <template if:true={relatedRecordBool}>
+        <lightning-file-upload label="Attach Files" name="UploadFile"  record-id={relatedRecordId}  onuploadfinished={handleUploadFinished} multiple file-field-name="Guest_Record_fileupload__c"  file-field-value={relatedRecordId}> </lightning-file-upload>
+    </template>
+    </div>
+
+    <footer class="slds-modal__footer">
+        <lightning-button variant="neutral" label="Close" onclick={closeModal}></lightning-button>
+    </footer>
+    </div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+</template>
+</lightning-card>
+</template>

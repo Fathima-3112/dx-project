@@ -1,0 +1,124 @@
+<template>
+    <lightning-card>
+           <!-- Parent spinner (covers entire screen) -->
+    <template if:true={isLoading}>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <lightning-spinner alternative-text="Loading" size="large" class="slds-spinner_container"></lightning-spinner>
+    </template>
+    
+        <div class="slds-text-heading_medium slds-text-align_center slds-p-around_medium">
+            Submit your request to the Logistics team using this portal
+        </div>
+        
+        <div class="slds-grid slds-wrap slds-p-around_medium slds-gutters">
+            <!-- Requestor Info -->
+            <div class="slds-col slds-size_1-of-5 slds-p-around_x-small">
+                <lightning-input
+                    label="Requestor Name"
+                    name="requestorName"
+                    value={requestorName}
+                    onchange={handleInputChange}
+                    required>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-p-around_x-small">
+                <lightning-input
+                    label="Requestor Email"
+                    name="requestorEmail"
+                    type="email"
+                    value={requestorEmail}
+                    onchange={handleInputChange}
+                    required>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-5 slds-p-around_x-small">
+                <lightning-input
+                    label="CC Email Address (individual email only)"
+                    name="ccEmailAddress"
+                    type="text"
+                    value={ccEmailAddress}
+                    onchange={handleInputChange}>
+                </lightning-input>
+            </div>
+
+            <!-- Request Type -->
+            <div class="slds-col slds-size_1-of-5 slds-p-around_x-small">
+                <lightning-radio-group name="requestTypes"
+                    label="Request Type"                                                               
+                    options={requestTypes}
+                    onchange={handleRequestTypeChange}
+                    value={requestType}
+                    required
+                    type="radio">
+                </lightning-radio-group>
+            </div>
+
+            <!-- Sub Request Type -->
+            <div class="slds-col slds-size_1-of-5 slds-p-around_x-small">
+                <template if:true={showSubRequestOptions}>
+                    <lightning-radio-group
+                        name="subRequestType"
+                        label="Sub Request Type"
+                        options={subRequestOptions}
+                        onchange={handleSubRequestTypeChange}
+                        value={selectedSubRequestType}
+                        required
+                        type="radio">
+                    </lightning-radio-group>
+                </template>
+            </div>
+        </div>
+
+        <lightning-spinner if:true={isLoading} alternative-text="Loading" size="medium"></lightning-spinner>
+
+        <template if:false={isLoading}>
+            <!-- Conditional rendering of child components -->
+            <template if:true={showCustomerOrder}>
+                <c-customer-order-request
+                    requestor-name={requestorName}
+                    requestor-email={requestorEmail}
+                    cc-email-address={ccEmailAddress}
+                    request-type={requestType}
+                    sub-request-type={selectedSubRequestType}
+                    oncasecreated={handleCaseCreated}>
+                </c-customer-order-request>
+            </template>
+
+    <template if:true={showStoreInventory}>
+                <c-store-inventory-request
+                    requestor-name={requestorName}
+                    requestor-email={requestorEmail}
+                    cc-email-address={ccEmailAddress}
+                    request-type={requestType}
+                    sub-request-type={selectedSubRequestType}
+                    oncasecreated={handleCaseCreated}>
+                </c-store-inventory-request>
+            </template>
+
+            <template if:true={showDcWarehouse}>
+                <c-dc-warehouse-request
+                    requestor-name={requestorName}
+                    requestor-email={requestorEmail}
+                    cc-email-address={ccEmailAddress}
+                    request-type={requestType}
+                    sub-request-type={selectedSubRequestType}
+                    oncasecreated={handleCaseCreated}>
+                </c-dc-warehouse-request>
+            </template>
+
+            <template if:true={showFinalMile}>
+                <c-final-mile-request
+                    requestor-name={requestorName}
+                    requestor-email={requestorEmail}
+                    cc-email-address={ccEmailAddress}
+                    request-type={requestType}
+                    sub-request-type={selectedSubRequestType}
+                    oncasecreated={handleCaseCreated}>
+                </c-final-mile-request>
+            </template>
+
+        </template>
+
+       
+    </lightning-card>
+</template>
